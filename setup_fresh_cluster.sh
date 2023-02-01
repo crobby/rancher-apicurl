@@ -10,3 +10,4 @@ fi
 ./set_aws_credential.sh awscred
 ./set_do_credential.sh docred
 ./set_gcloud_credential.sh googcred
+./add_users.sh
