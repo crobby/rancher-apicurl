@@ -29,11 +29,9 @@ DATA='{"type":"provisioning.cattle.io/cloud-credential","metadata":{"generateNam
 DATA=$(echo $DATA | sed -r 's/BEGINPRIVATEKEY/BEGIN PRIVATE KEY/g')
 DATA=$(echo $DATA | sed -r 's/ENDPRIVATEKEY/END PRIVATE KEY/g')
 
-echo "Rancher URL is: $RANCHER_URL"
-echo "Creating Google Cloud credential: $CRED_NAME"
 
 curl  "https://$RANCHER_URL/v3/cloudcredentials" \
   -H "cookie: R_SESS=$TOKEN" \
   -H 'content-type: application/json' \
   --data-raw "$DATA" \
-  --compressed | jq
+  --compressed | jq -r '.id'
