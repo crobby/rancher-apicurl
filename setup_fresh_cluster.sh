@@ -1,13 +1,7 @@
-export RANCHER_URL="${1:-$RANCHER_URL}"
-export TOKEN=$(./get_admin_token.sh)
-
-if [ -z ${RANCHER_URL+x} ];
-then
-    echo "You must set or specify the RANCHER_URL to use this utility"
-    exit 1
-fi
-
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+export TOKEN=$(${SCRIPT_DIR}/get_admin_token.sh)
+export RANCHER_URL="${1:-`${SCRIPT_DIR}/get_rancher_url.sh`}"
+echo "RANCHER_URL is: ${RANCHER_URL}"
 
 echo "Setting up AWS cloud credential"
 ${SCRIPT_DIR}/set_aws_credential.sh awscred

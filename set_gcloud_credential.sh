@@ -3,11 +3,11 @@
 #Expects your Rancher bearer token to be set...see README.md
 #if cred file isn't given, it will default to ~/creds/google.json
 #if rancher_url isn't given, it will try to use your env var
-
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CRED_NAME=$1
 GOOGLE_CRED_FILE=${2:-~/creds/google.json}
-RANCHER_URL="${3:-$RANCHER_URL}"
-TOKEN=$TOKEN
+export RANCHER_URL="${3:-`${SCRIPT_DIR}/get_rancher_url.sh`}"
+export TOKEN=$(${SCRIPT_DIR}/get_admin_token.sh)
 
 CLIENT_EMAIL=$(jq -r .client_email $GOOGLE_CRED_FILE)
 CLIENT_ID=$(jq -r .client_id $GOOGLE_CRED_FILE)
@@ -30,7 +30,7 @@ DATA=$(echo $DATA | sed -r 's/BEGINPRIVATEKEY/BEGIN PRIVATE KEY/g')
 DATA=$(echo $DATA | sed -r 's/ENDPRIVATEKEY/END PRIVATE KEY/g')
 
 
-curl  "https://$RANCHER_URL/v3/cloudcredentials" \
+curl  "$RANCHER_URL/v3/cloudcredentials" \
   -H "cookie: R_SESS=$TOKEN" \
   -H 'content-type: application/json' \
   --data-raw "$DATA" \

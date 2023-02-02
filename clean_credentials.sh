@@ -1,11 +1,10 @@
 ## expects RANCHER_URL and TOKEN to be set...see README.md
 ## Possibly not the safest thing to do, but it's a common cleanup case for me
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+export RANCHER_URL="${1:-`${SCRIPT_DIR}/get_rancher_url.sh`}"
+export TOKEN=$(${SCRIPT_DIR}/get_admin_token.sh)
 
-
-RANCHER_URL="${2:-$RANCHER_URL}"
-TOKEN=$TOKEN
-
-CCREDS=$(curl "https://$RANCHER_URL/v3/cloudCredentials" \
+CCREDS=$(curl "$RANCHER_URL/v3/cloudCredentials" \
   -H "cookie: R_SESS=$TOKEN" \
   --compressed | jq -r '.data[] | .links.remove')
 

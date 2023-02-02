@@ -2,16 +2,16 @@
 ## Possibly not the safest thing to do, but it's a common cleanup case for me
 
 ## ./get_cluster_roles_user.sh <cluster_id> <user_id>
-
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CLUSTER_ID=$1
 USER_ID=$2
-RANCHER_URL="${3:-$RANCHER_URL}"
-TOKEN=$TOKEN
+export RANCHER_URL="${3:-`${SCRIPT_DIR}/get_rancher_url.sh`}"
+export TOKEN=$(${SCRIPT_DIR}/get_admin_token.sh)
 
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-CRBS=$(curl -s "https://$RANCHER_URL/k8s/clusters/$CLUSTER_ID/v1/rbac.authorization.k8s.io.clusterrolebindings" \
+CRBS=$(curl -s "$RANCHER_URL/k8s/clusters/$CLUSTER_ID/v1/rbac.authorization.k8s.io.clusterrolebindings" \
   -H "cookie: R_SESS=$TOKEN" \
   --compressed | jq -r '.data[] | select(.subjects[].name == "'$USER_ID'") | .roleRef.name')
 
