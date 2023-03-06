@@ -13,3 +13,5 @@ echo "Adding users, standard, restricted admin, base"
 ${SCRIPT_DIR}/add_users.sh
 echo "Adding Digital Ocean node template"
 ${SCRIPT_DIR}/create_node_template.sh $DO_CC_ID cernt
+echo "Adding Active Directory Auth"
+${SCRIPT_DIR}/active_directory.sh
